@@ -19,7 +19,7 @@ interface NewUserData {
 class SignupController {
     @Post()
     @Wrapper(ExpressAsyncHandler)
-    private async create(req: Request, res: Response, next: NextFunction) {
+    private async create(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { email, password } = req.body;
 
         // Make sure the email and password are good.
@@ -44,7 +44,7 @@ class SignupController {
         }
 
         User.create(newUser)
-            .then(() => res.status(OK).send("New user created"))
+            .then(() => res.status(OK).send("New user created."))
             .catch(next)
     }
 }

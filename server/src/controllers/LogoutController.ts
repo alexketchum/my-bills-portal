@@ -7,7 +7,7 @@ import { ErrorHandler } from "../helpers/error";
 @Controller("logout")
 class LogoutController {
     @Post()
-    private logout(req: Request, res: Response, next: NextFunction) {
+    private logout(req: Request, res: Response, next: NextFunction): void {
         // add the jwt to the OldToken table and remove it from the headers,
         const { token } = req.cookies
 
