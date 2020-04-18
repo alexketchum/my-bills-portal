@@ -5,6 +5,7 @@ import { Server } from "@overnightjs/core";
 import SignupController from "./controllers/SignupController";
 import LoginController from "./controllers/LoginController";
 import LogoutController from "./controllers/LogoutController";
+import UserController from "./controllers/UserController";
 import sequelize from "../database/database";
 import { ErrorHandlerProps } from "./helpers/error";
 import ErrorHandlerMiddlware from "./middleware/ErrorHandlerMiddleware";
@@ -23,9 +24,10 @@ class AppServer extends Server {
         const signupController = new SignupController();
         const loginController = new LoginController();
         const logoutController = new LogoutController();
+        const userController = new UserController();
 
         super.addControllers(
-            [signupController, loginController, logoutController]
+            [signupController, loginController, logoutController, userController]
         );
     }
 
