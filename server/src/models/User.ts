@@ -1,4 +1,4 @@
-import { Column, CreatedAt, Default, IsUUID, Model, PrimaryKey, Table, UpdatedAt } from "sequelize-typescript";
+import { Column, CreatedAt, Default, IsUUID, Model, PrimaryKey, Table, UpdatedAt, DataType, AllowNull } from "sequelize-typescript";
 
 export interface UserProps {
     id: string;
@@ -6,6 +6,7 @@ export interface UserProps {
     email: string;
     password: string;
     reminder_emails: boolean;
+    reminder_dates: object;
     created: Date;
     updated: Date;
 }
@@ -14,21 +15,29 @@ export interface UserProps {
 class User extends Model<User> implements UserProps {
     @IsUUID(4)
     @PrimaryKey
+    @AllowNull(false)
     @Column
     id!: string
 
+    @IsUUID(4)
+    @AllowNull(false)
     @Column
     group_id!: string;
 
+    @AllowNull(false)
     @Column
     email!: string;
 
+    @AllowNull(false)
     @Column
     password!: string;
 
     @Default(false)
     @Column
     reminder_emails!: boolean;
+
+    @Column(DataType.JSON)
+    reminder_dates!: object;
 
     @CreatedAt
     @Column

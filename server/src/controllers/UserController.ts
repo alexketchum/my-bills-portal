@@ -1,39 +1,43 @@
 import { NextFunction, Response, Request } from "express";
-import { Controller, Put, Wrapper, Delete } from "@overnightjs/core";
-import { BAD_REQUEST, NOT_FOUND, OK, UNAUTHORIZED } from "http-status-codes";
+import { Controller, Put, Wrapper, Delete, ClassWrapper } from "@overnightjs/core";
+import { OK } from "http-status-codes";
 import * as ExpressAsyncHandler from "express-async-handler";
+import validator from "validator";
 import User from "../models/User";
-import { ErrorHandler } from "../helpers/error";
+import Bill from "../models/Bill";
+import { NotFoundError, BadRequestError, UnauthorizedError } from "../helpers/error";
 import { comparePasswords, hashPassword } from "../helpers/utils";
 
 @Controller("user")
+@ClassWrapper(ExpressAsyncHandler)
 class UserController {
     @Put("update")
-    @Wrapper(ExpressAsyncHandler)
     private async updateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { id, email, newPassword, originalPassword } = req.body;
         const user = await User.findByPk(id);
 
         if (!user) {
-            throw new ErrorHandler(NOT_FOUND, "User not found.");
+            return NotFoundError(`User not found`);
         }
 
-        if (email && user.email != email) {
-            user.email = email
+        if (!email || !validator.isEmail(email)) {
+            return BadRequestError("Invalid email address.")
         }
+
+        user.email = email
 
         if (newPassword && originalPassword) {
             const passwordsMatch = await comparePasswords(originalPassword, user.password);
 
             if (passwordsMatch) {
                 if (newPassword == originalPassword) {
-                    throw new ErrorHandler(BAD_REQUEST, "New password must be different from the current password.");
+                    return BadRequestError("New password must be different from the current password.");
                 }
 
                 user.password = await hashPassword(newPassword);
             }
             else {
-                throw new ErrorHandler(UNAUTHORIZED, "Wrong password entered.");
+                return UnauthorizedError("Wrong password entered.");
             }
         }
 
@@ -42,10 +46,21 @@ class UserController {
             .catch(next);
     }
 
-    @Delete("delete.:id")
-    private deleteUser(req: Request, res: Response, next: NextFunction): void {
-        // TODO: delete user from user table and all bills associated with the user
-        // (unless there is another user associated with the bills)
+    @Delete("delete/")
+    private async deleteUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const { id, group_id } = req.body;
+        const userGroup = await User.findAll({ where: { group_id: group_id }});
+
+        // If there is only one user with the group id than we'll delete all bills in that group,
+        if (userGroup.length == 1) {
+            Bill.destroy({ where: { group_id: group_id} })
+                .then((result) => console.log(`Bills in group ${group_id} have been deleted`))
+                .catch(next);
+        }
+
+        User.destroy({ where: { id: id } })
+            .then((result) => res.status(OK).send("User successfully deleted."))
+            .catch(next);
     }
 }
 

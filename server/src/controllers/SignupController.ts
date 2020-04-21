@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import { Controller, Post, Wrapper } from "@overnightjs/core";
 import { v4 as uuidv4 } from "uuid";
 import validator from "validator";
-import { OK, BAD_REQUEST } from "http-status-codes";
+import { OK } from "http-status-codes";
 import * as ExpressAsyncHandler from "express-async-handler";
 import User from "../models/User";
 import { hashPassword } from "../helpers/utils";
-import { ErrorHandler } from "../helpers/error";
+import { BadRequestError } from "../helpers/error";
 
 interface NewUserData {
     id: string;
@@ -24,11 +24,11 @@ class SignupController {
 
         // Make sure the email and password are good.
         if (!email || !password) {
-            throw new ErrorHandler(BAD_REQUEST, "Missing email or password.");
+            return BadRequestError("Missing email or password.");
         }
         
-        if (!validator.isEmail(email)) {
-            throw new ErrorHandler(BAD_REQUEST, "Invalid email adress.");
+        if (!validator.isEmail(email) && email !== process.env.SUPERUSER) {
+            return BadRequestError("Invalid email address.");
         }
 
         // Next we'll hash the password and generate some ids,

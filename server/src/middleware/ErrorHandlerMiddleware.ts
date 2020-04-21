@@ -1,12 +1,12 @@
 import { Response } from "express";
 import { ErrorHandlerProps } from "../helpers/error";
+import ErrorLogger from "../helpers/logger";
 
 const ErrorHandlerMiddleware = (err: ErrorHandlerProps, res: Response): void => {
     const { statusCode, message } = err;
 
-    console.log(err); // TODO: Have better error logging.
-
-    res.status(statusCode).json({ status: "Error", statusCode: statusCode , message: message });
+    ErrorLogger(err.message, err.stack);
+    res.status(statusCode ? statusCode : 400).json({ message: message });
 }
 
 export default ErrorHandlerMiddleware;

@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch",
-    "start": "nodemon --config \"./nodemon.json\"/"
+    "start": "env $(cat .env.dev| grep -v \"#\"| xargs) npm run dev",
+    "dev": "nodemon --config \"./nodemon.json\"/",
+    "build": "rm -rf ./build/ && tsc"
   },
   "keywords": [],
   "author": "",
@@ -33,7 +34,6 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
-    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "http-status-codes": "^1.4.0",

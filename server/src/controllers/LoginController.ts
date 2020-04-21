@@ -1,9 +1,9 @@
 import { NextFunction, Response, Request } from "express";
 import { Controller, Post, Wrapper } from "@overnightjs/core";
-import { BAD_REQUEST, NOT_FOUND, OK, UNAUTHORIZED } from "http-status-codes";
+import { OK } from "http-status-codes";
 import * as ExpressAsyncHandler from "express-async-handler";
 import User from "../models/User";
-import { ErrorHandler } from "../helpers/error";
+import { BadRequestError, NotFoundError, UnauthorizedError } from "../helpers/error";
 import { comparePasswords, generateJWT } from "../helpers/utils";
 
 interface UserProfileData {
@@ -21,7 +21,7 @@ class LoginController {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            throw new ErrorHandler(BAD_REQUEST, "Invalid email or password.");
+            return BadRequestError("Missing email or password");
         }
 
         User.findOne({
@@ -30,7 +30,7 @@ class LoginController {
             }
         }).then(async (user) => {
                 if (!user) {
-                    throw new ErrorHandler(NOT_FOUND, "User not found.");
+                    return NotFoundError(`User: ${email} not found.`);
                 }
 
                 const passwordsMatch = await comparePasswords(password, user.password);
@@ -50,7 +50,7 @@ class LoginController {
                         .json(userProfileData);
                 }
                 else {
-                    throw new ErrorHandler(UNAUTHORIZED, "Invalid login credentials.");
+                    return UnauthorizedError("Invalid email or password.");
                 }
             })
             .catch(next);
