@@ -1,9 +1,10 @@
-import { NextFunction, Response, Request } from "express";
+import { Express, NextFunction, Response, Request } from "express";
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import { Server } from "@overnightjs/core";
 import * as fs from "fs";
 import * as path from "path";
+import * as listEndPoints from "express-list-endpoints";
 import SignupController from "./controllers/SignupController";
 import LoginController from "./controllers/LoginController";
 import LogoutController from "./controllers/LogoutController";
@@ -40,6 +41,11 @@ class AppServer extends Server {
 
         this.app.listen(port, () => {
             console.log(`Server listening on port: ${port}`);
+
+            // Logs a list of the registered endpoints
+            if (process.env.NODE_ENV == "development") {
+                console.table(listEndPoints(<Express>this.app));
+            }
 
             // Creates the log directory if it does not already exist,
             const logDir = path.join(__dirname, "../", "log");
