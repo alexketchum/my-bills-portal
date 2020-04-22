@@ -59,7 +59,7 @@ class UserController {
         }
 
         User.destroy({ where: { id: id } })
-            .then((result) => res.status(OK).send("User successfully deleted."))
+            .then(() => res.status(OK).send("User successfully deleted."))
             .catch(next);
     }
 }

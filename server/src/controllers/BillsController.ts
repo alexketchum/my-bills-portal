@@ -6,7 +6,6 @@ import * as ExpressAsyncHandler from "express-async-handler";
 import User from "../models/User";
 import Bill, { BillProps } from "../models/Bill";
 import { BadRequestError, UnauthorizedError, NotFoundError } from "../helpers/error";
-import { hashPassword } from "../helpers/utils";
 
 @Controller("bills")
 @ClassWrapper(ExpressAsyncHandler)

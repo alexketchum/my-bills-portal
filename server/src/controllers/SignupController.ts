@@ -4,16 +4,9 @@ import { v4 as uuidv4 } from "uuid";
 import validator from "validator";
 import { OK } from "http-status-codes";
 import * as ExpressAsyncHandler from "express-async-handler";
-import User from "../models/User";
+import User, { UserProps } from "../models/User";
 import { hashPassword } from "../helpers/utils";
 import { BadRequestError } from "../helpers/error";
-
-interface NewUserData {
-    id: string;
-    group_id: string;
-    email: string;
-    password: string;
-}
 
 @Controller("signup")
 class SignupController {
@@ -27,7 +20,7 @@ class SignupController {
             return BadRequestError("Missing email or password.");
         }
         
-        if (!validator.isEmail(email) && email !== process.env.SUPERUSER) {
+        if (!validator.isEmail(email)) {
             return BadRequestError("Invalid email address.");
         }
 
@@ -36,7 +29,7 @@ class SignupController {
         const userId = uuidv4();
         const groupId = uuidv4();
 
-        const newUser: NewUserData = {
+        const newUser: UserProps = {
             id: userId,
             group_id: groupId,
             email: email,

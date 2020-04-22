@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from "express";
 import { Controller, Post } from "@overnightjs/core";
-import { BAD_REQUEST, OK } from "http-status-codes";
+import { OK } from "http-status-codes";
 import OldToken from "../models/OldToken";
 import { BadRequestError } from "../helpers/error";
 

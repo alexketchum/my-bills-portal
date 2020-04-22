@@ -5,10 +5,10 @@ export interface UserProps {
     group_id: string;
     email: string;
     password: string;
-    reminder_emails: boolean;
-    reminder_dates: object;
-    created: Date;
-    updated: Date;
+    reminder_emails?: boolean;
+    reminder_dates?: object;
+    created?: Date;
+    updated?: Date;
 }
 
 @Table
