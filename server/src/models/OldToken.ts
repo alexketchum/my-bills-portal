@@ -1,7 +1,7 @@
 import { AutoIncrement, Column, Model, PrimaryKey, Table } from "sequelize-typescript";
 
 interface OldTokenProps {
-    id: number;
+    _id: number;
     token: string;
 }
 
@@ -10,7 +10,7 @@ class OldToken extends Model implements OldTokenProps {
     @PrimaryKey
     @AutoIncrement
     @Column
-    id!: number
+    _id!: number
 
     @Column
     token!: string;
