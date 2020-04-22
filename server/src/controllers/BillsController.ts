@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Controller, ClassWrapper, Get, Post, Put } from "@overnightjs/core";
+import { Controller, ClassWrapper, Delete, Get, Post, Put } from "@overnightjs/core";
 import { v4 as uuidv4 } from "uuid";
 import { OK } from "http-status-codes";
 import * as ExpressAsyncHandler from "express-async-handler";
@@ -16,7 +16,7 @@ class BillsController {
 
         const bills: BillProps[] = await Bill.findAll({
             where: { group_id: group_id },
-            attributes: [ "id", "name", "due_date", "amount_due" ]
+            attributes: [ "_id", "name", "due_date", "amount_due" ]
         });
 
         if (!bills) {
@@ -28,9 +28,9 @@ class BillsController {
 
     @Get("view/:id")
     private async getBill(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const { id } = req.params;
+        const { _id } = req.params;
         
-        Bill.findByPk(id)
+        Bill.findByPk(_id)
             .then((bill) => {
                 if (!bill) {
                     return NotFoundError(`Bill not found`);
@@ -43,17 +43,17 @@ class BillsController {
 
     @Put("update")
     private updateBill(req: Request, res: Response, next: NextFunction): void {
-        Bill.update(req.body, { where: { id: req.body.id } })
+        Bill.update(req.body, { where: { _id: req.body._id } })
             .then((result) => {
                 if (!result[0]) {
-                    return NotFoundError(`Bill with id ${req.body.id} not found.`);
+                    return NotFoundError(`Bill with id ${req.body._id} not found.`);
                 }
                 res.status(OK).json(result);
             })
             .catch(next)
     }
 
-    @Post()
+    @Post("new")
     private create(req: Request, res: Response, next: NextFunction): void {
         const { group_id, name, due_date, amount_due, amount_left, login, password, url, notes } = req.body;
 
@@ -73,7 +73,7 @@ class BillsController {
         
                 const id = uuidv4();
                 const newBill: BillProps = {
-                    id: id,
+                    _id: id,
                     group_id: group_id,
                     name: name,
                     due_date: due_date,
@@ -89,6 +89,13 @@ class BillsController {
                     .then(() => res.status(OK).send("New bill created."))
                     .catch(next);
             })
+            .catch(next);
+    }
+
+    @Delete("delete/:_id")
+    private deleteBill(req: Request, res: Response, next: NextFunction): void {
+        Bill.destroy({ where: { _id: req.params._id } })
+            .then(() => res.status(OK).send("Bill deleted."))
             .catch(next);
     }
 }

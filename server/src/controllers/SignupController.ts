@@ -30,7 +30,7 @@ class SignupController {
         const groupId = uuidv4();
 
         const newUser: UserProps = {
-            id: userId,
+            _id: userId,
             group_id: groupId,
             email: email,
             password: hashedPassword

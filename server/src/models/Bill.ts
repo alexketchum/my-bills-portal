@@ -1,7 +1,7 @@
 import { Column, CreatedAt, IsUUID, Model, PrimaryKey, Table, UpdatedAt, DataType, AllowNull } from "sequelize-typescript";
 
 export interface BillProps {
-    id: string;
+    _id: string;
     group_id: string;
     name: string;
     due_date?: number;
@@ -20,7 +20,7 @@ class Bill extends Model<Bill> implements BillProps {
     @PrimaryKey
     @AllowNull(false)
     @Column
-    id!: string;
+    _id!: string;
 
     @IsUUID(4)
     @AllowNull(false)

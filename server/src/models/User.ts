@@ -1,7 +1,7 @@
 import { Column, CreatedAt, Default, IsUUID, Model, PrimaryKey, Table, UpdatedAt, DataType, AllowNull } from "sequelize-typescript";
 
 export interface UserProps {
-    id: string;
+    _id: string;
     group_id: string;
     email: string;
     password: string;
@@ -17,7 +17,7 @@ class User extends Model<User> implements UserProps {
     @PrimaryKey
     @AllowNull(false)
     @Column
-    id!: string
+    _id!: string
 
     @IsUUID(4)
     @AllowNull(false)

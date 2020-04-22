@@ -7,7 +7,7 @@ import { BadRequestError, NotFoundError, UnauthorizedError } from "../helpers/er
 import { comparePasswords, generateJWT } from "../helpers/utils";
 
 interface UserProfileData {
-    id: string;
+    _id: string;
     group_id: string;
     email: string;
     reminder_emails: boolean;
@@ -38,12 +38,12 @@ class LoginController {
                 if (passwordsMatch) {
                     // We'll get only the data that needs to be sent to the client,
                     const userProfileData: UserProfileData = {
-                        id: user.id,
+                        _id: user._id,
                         group_id: user.group_id,
                         email: user.email,
                         reminder_emails: user.reminder_emails
                     }
-                    const token = generateJWT(user.id);
+                    const token = generateJWT(user._id);
 
                     res.status(OK)
                         .cookie("token", token, { maxAge: 86400 })

@@ -13,8 +13,8 @@ import { comparePasswords, hashPassword } from "../helpers/utils";
 class UserController {
     @Put("update")
     private async updateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const { id, email, newPassword, originalPassword } = req.body;
-        const user = await User.findByPk(id);
+        const { _id, email, newPassword, originalPassword } = req.body;
+        const user = await User.findByPk(_id);
 
         if (!user) {
             return NotFoundError(`User not found`);
@@ -48,7 +48,7 @@ class UserController {
 
     @Delete("delete/")
     private async deleteUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const { id, group_id } = req.body;
+        const { _id, group_id } = req.body;
         const userGroup = await User.findAll({ where: { group_id: group_id }});
 
         // If there is only one user with the group id than we'll delete all bills in that group,
@@ -58,7 +58,7 @@ class UserController {
                 .catch(next);
         }
 
-        User.destroy({ where: { id: id } })
+        User.destroy({ where: { _id: _id } })
             .then(() => res.status(OK).send("User successfully deleted."))
             .catch(next);
     }
