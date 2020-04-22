@@ -1,8 +1,8 @@
 import { NextFunction, Response, Request } from "express";
 import { Controller, Post } from "@overnightjs/core";
-import { BAD_REQUEST, OK } from "http-status-codes";
+import { OK } from "http-status-codes";
 import OldToken from "../models/OldToken";
-import { ErrorHandler } from "../helpers/error";
+import { BadRequestError } from "../helpers/error";
 
 @Controller("logout")
 class LogoutController {
@@ -12,12 +12,12 @@ class LogoutController {
         const { token } = req.cookies
 
         OldToken.create({ token: token })
-            .then(result => {
+            .then((result) => {
                 if (result) {
                     res.status(OK).clearCookie("token").send("Successfully logged out.");
                 }
                 else {
-                    throw new ErrorHandler(BAD_REQUEST, "Whoops!. Something went wrong!");
+                    return BadRequestError("Whoops! Something went wrong!");
                 }
             })
             .catch(next)
