@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from "express";
-import { Controller, Put, Wrapper, Delete, ClassWrapper } from "@overnightjs/core";
+import { Controller, Put, Wrapper, Delete, ClassWrapper, ClassMiddleware } from "@overnightjs/core";
 import { OK } from "http-status-codes";
 import * as ExpressAsyncHandler from "express-async-handler";
 import validator from "validator";
@@ -7,9 +7,11 @@ import User from "../models/User";
 import Bill from "../models/Bill";
 import { NotFoundError, BadRequestError, UnauthorizedError } from "../helpers/error";
 import { comparePasswords, hashPassword } from "../helpers/utils";
+import CheckToken from "../middleware/CheckToken";
 
 @Controller("user")
 @ClassWrapper(ExpressAsyncHandler)
+@ClassMiddleware([CheckToken])
 class UserController {
     @Put("update")
     private async updateUser(req: Request, res: Response, next: NextFunction): Promise<void> {

@@ -12,6 +12,5 @@ export const comparePasswords = (plainPassword: string, hashedPassword: string):
 export const generateJWT = (id: string): string => {
     const secret = <jwt.Secret>process.env.JWT_KEY
 
-    // return jwt.sign({ id: id }, secret, { expiresIn: 86400 });
-    return jwt.sign({ id: id }, secret, { expiresIn: '1m' });
+    return jwt.sign({ id: id }, secret, { expiresIn: 86400 });
 }
