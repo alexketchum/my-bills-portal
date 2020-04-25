@@ -11,7 +11,7 @@ import { ErrorHandlerProps } from "./helpers/error";
 import ErrorHandlerMiddlware from "./middleware/ErrorHandlerMiddleware";
 
 class AppServer extends Server {
-     constructor() {
+    constructor() {
         super(true);
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
