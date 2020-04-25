@@ -1,14 +1,16 @@
 import { Request, Response, NextFunction } from "express";
-import { Controller, ClassWrapper, Delete, Get, Post, Put } from "@overnightjs/core";
+import { Controller, ClassMiddleware, ClassWrapper, Delete, Get, Post, Put } from "@overnightjs/core";
 import { v4 as uuidv4 } from "uuid";
 import { OK } from "http-status-codes";
 import * as ExpressAsyncHandler from "express-async-handler";
 import User from "../models/User";
 import Bill, { BillProps } from "../models/Bill";
 import { BadRequestError, UnauthorizedError, NotFoundError } from "../helpers/error";
+import CheckToken from "../middleware/CheckToken";
 
 @Controller("bills")
 @ClassWrapper(ExpressAsyncHandler)
+@ClassMiddleware([CheckToken])
 class BillsController {
     @Get(":group_id")
     private async getAllBills(req: Request, res: Response): Promise<void> {
