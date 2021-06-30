@@ -1,7 +1,7 @@
 # My Bills Portal
 
 ### Description
-A simple web app to track and pay bills. It includes an Express backend and a React frontend.
+A simple web app to track and pay bills. It uses Java (Spring Boot) for the backend and React for the frontend
 
 ### Prerequisites
 1. [Node & NPM](https://nodejs.org/en/)
